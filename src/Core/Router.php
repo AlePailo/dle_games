@@ -25,11 +25,11 @@ final class Router {
         $path = trim($path, '/');
 
         if($path === '') {
-            (new HomeController($this->pdo))->getAllFranchises();
+            (new HomeController($this->pdo, $this->basePath))->getAllFranchises();
             return;
         }
         
-        (new GameController($this->pdo))->show($path);
+        (new GameController($this->pdo, $this->basePath))->show($path);
     }
 
 }

@@ -6,5 +6,5 @@ return [
     'dbname' => 'dle_games',
     'user' => 'root',
     'password' => '',
-    'charset' => 'utf8mb4',
+    'charset' => 'utf8mb4'
 ];

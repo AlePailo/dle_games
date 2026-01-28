@@ -9,11 +9,9 @@ class CharacterRepository {
     
     public function __construct(private PDO $pdo) {}
 
-    public function findByFranchiseSlug(string $franchiseSlug) {
-        $stmt = $this->pdo->prepare("SELECT c.name, gender, age, hair_color, eyes_color, affiliation, role, status, c.image_url 
-            FROM characters c INNER JOIN franchises f ON c.franchise_id = f.id
-            WHERE slug = :slug");
-        $stmt->execute(['slug' => $franchiseSlug]);
+    public function findByFranchiseId(int $franchiseId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM characters WHERE franchise_id = :franchise_id");
+        $stmt->execute(['franchise_id' => $franchiseId]);
 
         $characters = [];
 

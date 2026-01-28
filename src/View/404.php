@@ -1,3 +1,6 @@
-<?php
+<section class="not-available-section">
 
-http_response_code(404);
+    <img class="not-found-image" src="<?= $basePath ?>/assets/img/404.png" alt="404 Image">
+    <h1>404, Pagina Non Trovata</h1>
+
+</section>
