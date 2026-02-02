@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 
 final class Character {
 
+    //private int $id;
     private string $name;
     private string $gender;
     private string $age;
@@ -16,6 +17,7 @@ final class Character {
 
     
     public function __construct(
+        //int $id,
         string $name,
         string $gender,
         string $age,
@@ -26,6 +28,7 @@ final class Character {
         string $status,
         string $imageUrl
     ) {
+        //$this->id = $id;
         $this->name = $name;
         $this->gender = $gender;
         $this->age = $age;
@@ -37,8 +40,16 @@ final class Character {
         $this->imageUrl = $imageUrl;
     }
 
+    /*public function getId() : int {
+        return $this->id;
+    }*/
+
     public function getName() : string {
         return $this->name;
+    }
+
+    public function getGender() : string {
+        return $this->gender;
     }
 
     public function getAge() : string {
@@ -59,6 +70,14 @@ final class Character {
 
     public function getRole() : string {
         return $this->role;
+    }
+
+    public function getStatus() : string {
+        return $this->status;
+    }
+
+    public function getImageUrl() : string {
+        return $this->imageUrl;
     }
 
 }

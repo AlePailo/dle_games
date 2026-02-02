@@ -16,7 +16,7 @@ class CharacterRepository {
         $characters = [];
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $characters[] = new Character($row['name'], $row['gender'], $row['age'], $row['hair_color'], $row['eyes_color'], $row['affiliation'], $row['role'], $row['status'], $row['image_url']);
+            $characters[] = new Character(/*(int)$row['id'], */$row['name'], $row['gender'], $row['age'], $row['hair_color'], $row['eyes_color'], $row['affiliation'], $row['role'], $row['status'], $row['image_url']);
         }
 
         return $characters;

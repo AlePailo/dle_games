@@ -3,9 +3,10 @@
 return [
     'detective-conan' => [
         'columns' => [
+            'image_url' => 'Image',
             'name' => 'Name',
             'gender' => 'Gender',
-            'age_range' => 'Age',
+            'age' => 'Age',
             'hair_color' => 'Hair Color',
             'eyes_color' => 'Eyes Color',
             'affiliation' => 'Affiliation',

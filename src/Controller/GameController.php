@@ -20,6 +20,7 @@ final class GameController {
     public function show($path) {
         $franchise = $this->franchiseRepository->findBySlug($path);
         $basePath = $this->basePath;
+        $startScript = false;
 
         if(!$franchise || !$franchise->getActive()) {
             $title = 'Page Not Found - DLE Games';
@@ -40,7 +41,7 @@ final class GameController {
             return;
         }*/
 
-        $charactersList = $this->characterRepository->findByFranchiseId($franchise->getId());
+        $characters = $this->characterRepository->findByFranchiseId($franchise->getId());
 
         $title = $franchise->getName() . ' - DLE Games';
         $metaDescription = $franchise->getDescription();
@@ -51,7 +52,21 @@ final class GameController {
             throw new NotFoundException();
         }
         $columns = $gameConfig[0]['columns'];
-        
+        $startScript = true;
+
+        $charactersForGame = [];
+        foreach($characters as $character) {
+            $data = [];
+            foreach(array_keys($columns) as $field) {
+                $getter = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
+                if (method_exists($character, $getter)) {
+                    $data[$field] = $character->$getter();
+                }
+            }
+
+            $charactersForGame[$character->getName()] = $data;
+        }
+
         ob_start();
         require __DIR__ . '/../View/game.php';
         $content = ob_get_clean();
