@@ -10,6 +10,7 @@ final class GameController {
 
     private CharacterRepository $characterRepository;
     private FranchiseRepository $franchiseRepository;
+    private string $basePath;
 
     public function __construct(PDO $pdo, string $basePath) {
         $this->characterRepository = new CharacterRepository($pdo);
@@ -45,12 +46,13 @@ final class GameController {
 
         $title = $franchise->getName() . ' - DLE Games';
         $metaDescription = $franchise->getDescription();
+        $slug = $franchise->getSlug();
         
         $config = require __DIR__ . '/../../config/games.php';
         $gameConfig = [$config[$franchise->getSlug()]] ?? null;
-        if(!$gameConfig) {
+        /*if(!$gameConfig) {
             throw new NotFoundException();
-        }
+        }*/
         $columns = $gameConfig[0]['columns'];
         $startScript = true;
 

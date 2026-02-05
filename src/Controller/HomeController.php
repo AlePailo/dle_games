@@ -20,6 +20,7 @@ final class HomeController {
         $basePath = $this->basePath;
         $title = 'Home - DLE Games';
         $metaDescription = 'Guess characters from your favourite games and anime';
+        $startScript = false;
 
         ob_start();
         require __DIR__ . '/../View/home.php';
