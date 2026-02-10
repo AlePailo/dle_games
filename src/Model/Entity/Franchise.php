@@ -9,7 +9,8 @@ final class Franchise {
     private string $slug;
     private string $description;
     private bool $active;
-    private string $image_url;
+    private string $icon_url;
+    private string $bg_image_url;
     private string $created_at;     //gestire meglio il type
     private string $updated_at;     //gestire meglio il type
 
@@ -19,7 +20,8 @@ final class Franchise {
         string $slug,
         string $description,
         bool $active,
-        string $image_url,
+        string $icon_url,
+        string $bg_image_url,
         string $created_at,
         string $updated_at
     ) {
@@ -28,7 +30,8 @@ final class Franchise {
         $this->slug = $slug;
         $this->description = $description;
         $this->active = $active;
-        $this->image_url = $image_url;
+        $this->icon_url = $icon_url;
+        $this->bg_image_url = $bg_image_url;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
@@ -53,8 +56,12 @@ final class Franchise {
         return $this->active;
     }
 
-    public function getImageUrl() {
-        return $this->image_url;
+    public function getIconUrl() {
+        return $this->icon_url;
+    }
+
+    public function getBgImageUrl() {
+        return $this->bg_image_url;
     }
 
     public function getCreatedAt() {

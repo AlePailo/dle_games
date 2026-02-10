@@ -1,45 +1,48 @@
 $(document).ready(function() {
     //localStorage.removeItem('dle_games_stats')
+    //localStorage.removeItem('dle_games_savedGames')
     console.log(localStorage)
     const { characters, columns, basePath } = GAME_DATA
-    startGame(characters)
-    //let {randomChar, charactersClone} = GAME_DATA
+    
+    const savedGame = getSavedGame(GAME_DATA.gameSlug)
+
+    if(savedGame) {
+        restoreGame(savedGame, characters, basePath)
+    } else {
+        startGame(characters)
+    }
+
     const $suggestions = $('.suggestions')
     const $textInput = $('#game-text-input')
     
     $('body').on('keyup', '#game-text-input', function(e) {
         let currentVal = $(this).val()
-        if(e.key === 'Enter' || e.keyCode === 13) {
-            let guess = $suggestions.children(':first').children('p').text()
-            tryGuess(guess, characters, GAME_DATA.charactersClone, GAME_DATA.randomChar, basePath)
-            $textInput.val('')
+
+        if(currentVal === '') {
+            hideSuggestions()
             $('.x').hide()
             return
         }
 
-        $suggestions.empty()
-        if(currentVal === '') {
-            $('.x').hide()
+        if(e.key === 'Enter' || e.keyCode === 13) {
+            handleGuessInput($textInput, $suggestions, characters, basePath)
             return
         }
+
+        
+        $suggestions.empty()
         $('.x').show()
         const matches = findMatches(GAME_DATA.charactersClone, currentVal)
         buildAutoComplete(GAME_DATA.charactersClone, matches, basePath, $suggestions)
     })
 
     $('body').on('click', '#btn-game-guess', function() {
-        /*$textInput = $('#game-text-input')
-        let guess = $textInput.val()*/
         if($textInput.val() === '') return
-        let guess = $suggestions.children(':first').children('p').text()
-        tryGuess(guess, characters, GAME_DATA.charactersClone, GAME_DATA.randomChar, basePath)
-        $textInput.val('')
-        $textInput.focus()
-        $('.x').hide()
+        handleGuessInput($textInput, $suggestions, characters, basePath)
     })
 
     $('body').on('click', '.suggestion', function() {
-        tryGuess($(this).text(), characters, GAME_DATA.charactersClone, GAME_DATA.randomChar, basePath)
+        tryGuess($(this).text(), characters, GAME_DATA.charactersClone, GAME_DATA.gameState.solution, basePath)
         $textInput.val('')
         $textInput.focus()
         $('.x').hide()
@@ -75,7 +78,7 @@ $(document).ready(function() {
     })
 
     $('body').on('click', '#giveup-btn', function() {
-        endGame(GAME_DATA.gameSlug, 'Surrender', GAME_DATA.gameState.guessesCount)
+        endGame(GAME_DATA.gameSlug, 'Surrender', GAME_DATA.gameState.guesses.length)
     })
 
     $('body').on('click', '#new-game-btn', function() {
@@ -108,29 +111,14 @@ function buildAutoComplete(characters, matches, basePath, $suggestions) {
 }
 
 function tryGuess(charName, characters, charactersClone, randomChar, basePath) {
-    $guessRow = $('<tr></tr>')
-    for(attribute in characters[charName]){
-        if(attribute === 'image_url') {
-            $img = $('<img>').attr('src', `${basePath}/assets/img/characters_icons/${characters[charName][attribute]}`)
-            $attribute = $('<td></td>').addClass('table-cell')
-            $attribute.append($img)
-        } else {
-            $attribute = $('<td></td>').addClass('table-cell').text(characters[charName][attribute])
-            if(characters[charName][attribute] === randomChar[attribute]) {
-                $attribute.addClass('correct')
-            } else {
-                $attribute.addClass('wrong')
-            }
-        }
-        $guessRow.append($attribute)
-    }
+    buildGuessUI(charName, randomChar, characters, basePath)
     delete charactersClone[charName]
     $('.guesses').prepend($guessRow)
     hideSuggestions()
     if($('#giveup-btn').attr('disabled')) $('#giveup-btn').attr('disabled', false)
 
-    GAME_DATA.gameState.guessesCount++ 
-    if(charName === randomChar['name']) endGame(GAME_DATA.gameSlug, 'Win', GAME_DATA.gameState.guessesCount)
+    addGuessToSavedGame(GAME_DATA.gameSlug, charName)
+    if(charName === randomChar['name']) endGame(GAME_DATA.gameSlug, 'Win', GAME_DATA.gameState.guesses.length)
 }
 
 function showSuggestions() {
@@ -138,25 +126,27 @@ function showSuggestions() {
 }
 
 function hideSuggestions() {
+    $('.suggestions').empty()
     $('.suggestions').hide()
 }
 
 function startGame(characters) {
+    $('.guesses').empty()
+    $('#game-text-input').val('')
     $('#game-recap-container').addClass('hidden')
     GAME_DATA.stats = getStats()
     GAME_DATA.gameState = {
-        guessesCount: 0,
-        result: null
+        solution: getRandomChar(characters),
+        guesses: []
     }
-    GAME_DATA.randomChar = getRandomChar(characters)
     GAME_DATA.charactersClone = {...GAME_DATA.characters}
     console.log(GAME_DATA)
 }
 
-function updateLocalStorage(slug, result, guessesCount) {
-    setupFranchise(GAME_DATA.stats, slug)
+function updateLocalStorage(slug, generalStats, result, guessesCount) {
+    setupFranchise(generalStats, slug)
 
-    const stats = GAME_DATA.stats.franchises[slug]
+    const stats = generalStats.franchises[slug]
     stats.played++
 
     if(result === 'Surrender') {
@@ -177,7 +167,7 @@ function updateLocalStorage(slug, result, guessesCount) {
         if(stats.currentStreak > stats.bestStreak) stats.bestStreak = stats.currentStreak*/
     }
 
-    localStorage.setItem('dle_games_stats', JSON.stringify(GAME_DATA.stats))
+    localStorage.setItem('dle_games_stats', JSON.stringify(generalStats))
 
     return stats
 
@@ -215,17 +205,110 @@ function setupFranchise(stats, slug) {
 }
 
 function endGame(slug, result, guessesCount) {
-    const updatedStats = updateLocalStorage(slug, result, guessesCount)
+    const oldStats = getStats()
+    const updatedStats = updateLocalStorage(slug, oldStats, result, guessesCount)
     generateRecap(updatedStats)
-    $('.guesses').empty()
+    removeSavedGame(slug)
     $('#giveup-btn').attr('disabled', true)
 }
 
 function generateRecap(stats) {
-    const solution = GAME_DATA.randomChar
+    const solution = GAME_DATA.gameState.solution
     $('#solution-name span').text(solution.name)
     $('#solution-img').attr('src', `${GAME_DATA.basePath}/assets/img/characters_icons/${solution.image_url}`)
 
     Array.from($('#player-stats').children('p')).forEach(p => $(p).children('span').text(stats[$(p).attr('data-stats-link')]))
     $('#game-recap-container').removeClass('hidden')
+}
+
+
+
+
+
+function getSavedGames() {
+    const raw = JSON.parse(localStorage.getItem('dle_games_savedGames'))
+
+    if(raw) return raw
+
+    localStorage.setItem('dle_games_savedGames', JSON.stringify({}))
+    return {}
+}
+
+
+function getSavedGame(slug) {
+    const games = getSavedGames()
+    return games[slug] ?? null
+}
+
+
+function restoreGame(gameState, characters, basePath) {
+    GAME_DATA.gameState = gameState
+    const guesses = gameState.guesses
+    GAME_DATA.charactersClone = {}
+    for(const [key, value] of Object.entries(GAME_DATA.characters)) {
+        if(!guesses.includes(key)) GAME_DATA.charactersClone[key] = value
+    }
+    console.log(GAME_DATA.charactersClone)
+
+    guesses.forEach(guess => {
+        buildGuessUI(guess, GAME_DATA.gameState.solution, characters, basePath)
+        $('.guesses').prepend($guessRow)
+        hideSuggestions()
+        if($('#giveup-btn').attr('disabled')) $('#giveup-btn').attr('disabled', false)
+    })
+}
+
+function persistSavedGames(slug, gameState) {
+    const games = getSavedGames()
+    games[slug] = gameState
+    console.log(games)
+    localStorage.setItem('dle_games_savedGames', JSON.stringify(games))
+}
+
+function addGuessToSavedGame(slug, guess) {
+    GAME_DATA.gameState.guesses.push(guess)
+    persistSavedGames(slug, GAME_DATA.gameState)
+}
+
+
+
+
+// ON WIN / GIVE UP
+
+function removeSavedGame(slug) {
+    const games =  getSavedGames()
+    delete games[slug]
+    localStorage.setItem('dle_games_savedGames', JSON.stringify(games))
+}
+
+
+
+
+function handleGuessInput(inputTextBox, suggestions, characters, basePath) {
+    let guess = suggestions.children(':first').children('p').text()
+    if(!guess) return
+    tryGuess(guess, characters, GAME_DATA.charactersClone, GAME_DATA.gameState.solution, basePath)
+    inputTextBox.val('')
+    inputTextBox.focus()
+    $('.x').hide()
+}
+
+
+function buildGuessUI(charName, solution, characters, basePath) {
+    $guessRow = $('<tr></tr>')
+        for(attribute in characters[charName]){
+            if(attribute === 'image_url') {
+                $img = $('<img>').attr('src', `${basePath}/assets/img/characters_icons/${characters[charName][attribute]}`)
+                $attribute = $('<td></td>').addClass('table-cell')
+                $attribute.append($img)
+            } else {
+                $attribute = $('<td></td>').addClass('table-cell').text(characters[charName][attribute])
+                if(characters[charName][attribute] === solution[attribute]) {
+                    $attribute.addClass('correct')
+                } else {
+                    $attribute.addClass('wrong')
+                }
+            }
+            $guessRow.append($attribute)
+        }
 }

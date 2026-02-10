@@ -38,9 +38,6 @@
     </table>
 </div>
 
-<div class="giveup-confirmation">
-</div>
-
 <div id="game-recap-container" class="flex-center hidden">
     <div class="game-recap">
         <div id="solution-infos" class="flex-center fd-column g1">

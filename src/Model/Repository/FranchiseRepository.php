@@ -16,7 +16,7 @@ class FranchiseRepository {
         $franchises = [];
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $franchises[] = new Franchise((int)$row['id'], $row['name'], $row['slug'], $row['description'], (bool)$row['active'], $row['image_url'], $row['created_at'], $row['updated_at']);
+            $franchises[] = new Franchise((int)$row['id'], $row['name'], $row['slug'], $row['description'], (bool)$row['active'], $row['icon_url'], $row['bg_image_url'], $row['created_at'], $row['updated_at']);
         }
 
         return $franchises;
@@ -32,7 +32,7 @@ class FranchiseRepository {
             return null;
         }
 
-        $franchiseObj = new Franchise((int)$res['id'], $res['name'], $res['slug'], $res['description'], (bool)$res['active'], $res['image_url'], $res['created_at'], $res['updated_at']);
+        $franchiseObj = new Franchise((int)$res['id'], $res['name'], $res['slug'], $res['description'], (bool)$res['active'], $res['icon_url'], $res['bg_image_url'], $res['created_at'], $res['updated_at']);
 
         return $franchiseObj;
     }

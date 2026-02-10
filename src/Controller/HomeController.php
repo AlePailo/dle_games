@@ -8,6 +8,7 @@ use PDO;
 final class HomeController {
     
     private FranchiseRepository $franchiseRepository;
+    private string $basePath;
 
     public function __construct(PDO $pdo, string $basePath) {
         $this->franchiseRepository = new FranchiseRepository($pdo);

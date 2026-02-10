@@ -47,6 +47,7 @@ final class GameController {
         $title = $franchise->getName() . ' - DLE Games';
         $metaDescription = $franchise->getDescription();
         $slug = $franchise->getSlug();
+        $gameBackground = $franchise->getBgImageUrl();
         
         $config = require __DIR__ . '/../../config/games.php';
         $gameConfig = [$config[$franchise->getSlug()]] ?? null;
