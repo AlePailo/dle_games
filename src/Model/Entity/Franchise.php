@@ -72,4 +72,11 @@ final class Franchise {
         return $this->updated_at;
     }
 
+    public function isNew($days = 30) {
+        $created_at = new \DateTime($this->created_at);
+        $threshold =  new \DateTime(" -{$days} days");
+
+        return $created_at >= $threshold;
+    }
+
 }

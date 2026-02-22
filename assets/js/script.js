@@ -100,6 +100,14 @@ function findMatches(characters, input) {
 
 function buildAutoComplete(characters, matches, basePath, $suggestions) {
     showSuggestions()
+
+    if(!matches.length) {
+        console.log("No matches")
+        const $noSuggestions = $('<p></p>').text('No matches').addClass('no-suggestions')
+        $suggestions.append($noSuggestions)
+        return
+    }
+
     matches.forEach(char => {
         const $suggestion = $('<div></div>').addClass('suggestion')
         const $image = $('<img>').attr('src', `${basePath}/assets/img/characters_icons/${characters[char].image_url}`)
@@ -123,6 +131,7 @@ function tryGuess(charName, characters, charactersClone, randomChar, basePath) {
 
 function showSuggestions() {
     $('.suggestions').show()
+    $('.suggestions').scrollTop(0)
 }
 
 function hideSuggestions() {

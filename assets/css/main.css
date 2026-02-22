@@ -137,7 +137,7 @@ textarea, select {
   position: relative;
 }
 
-.franchise-card__image-container::after {
+/*.franchise-card__image-container::after {
   content: "NEW";
   background: var(--color-wrong);
   position: absolute;
@@ -146,19 +146,33 @@ textarea, select {
   border-radius: 2.5px;
   padding: 0.15rem;
   font-size: 0.85em;
+}*/
+
+
+.franchise-card__badge {
+  background: var(--color-wrong);
+  position: absolute;
+  top: -10%;
+  right: -20%;
+  border-radius: 2.5px;
+  padding: 0.15rem;
+  font-size: 0.85em;
+  z-index: 999;
 }
+
 
 .franchise-card__name {
   text-align: center;
 }
 
-.disabled {
+.disabled > img,
+.disabled + h3 {
   opacity: 0.3;
 }
 
-.disabled::after {
+/*.disabled::after {
   content: "DISABLED";
-}
+}*/
 
 .site-footer {
   flex: 0 1 auto;
@@ -323,6 +337,15 @@ textarea, select {
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 2;
+}
+
+.no-suggestions {
+  background: var(--color-text-primary);
+  color: var(--color-bg-main);
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  padding: 0.75rem;
 }
 
 .suggestion {
