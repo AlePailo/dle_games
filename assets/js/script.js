@@ -217,6 +217,7 @@ function endGame(slug, result, guessesCount) {
     const oldStats = getStats()
     const updatedStats = updateLocalStorage(slug, oldStats, result, guessesCount)
     generateRecap(updatedStats)
+    buildSolutionTable()
     removeSavedGame(slug)
     $('#giveup-btn').attr('disabled', true)
 }
@@ -226,7 +227,7 @@ function generateRecap(stats) {
     $('#solution-name span').text(solution.name)
     $('#solution-img').attr('src', `${GAME_DATA.basePath}/assets/img/characters_icons/${solution.image_url}`)
 
-    Array.from($('#player-stats').children('p')).forEach(p => $(p).children('span').text(stats[$(p).attr('data-stats-link')]))
+    Array.from($('.stats-row').children('p')).forEach(p => $(p).children('span').text(stats[$(p).attr('data-stats-link')]))
     $('#game-recap-container').removeClass('hidden')
 }
 
@@ -320,4 +321,21 @@ function buildGuessUI(charName, solution, characters, basePath) {
             }
             $guessRow.append($attribute)
         }
+}
+
+
+function buildSolutionTable() {
+    $solutionTable = $('#solution-infos-table')
+    $solutionTable.empty()
+    const excludedColumns = ['name', 'image_url']
+    for(attribute of Object.keys(GAME_DATA.gameState.solution)) {
+        if(excludedColumns.includes(attribute)) continue
+        $row = $('<tr></tr>').addClass('solution-infos-table-row')
+        let formattedAttr = attribute.charAt(0).toUpperCase() + attribute.slice(1)
+        formattedAttr = formattedAttr.replace('_', ' ')
+        $attr = $('<td></td>').text(formattedAttr).addClass('solution-infos-table-attribute')
+        $value = $('<td></td>').text(GAME_DATA.gameState.solution[attribute]).addClass('solution-infos-table-value')
+        $row.append($attr, $value)
+        $solutionTable.append($row)
+    }
 }

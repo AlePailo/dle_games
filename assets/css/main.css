@@ -386,10 +386,11 @@ textarea, select {
 .game-recap {
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
-  gap: 2.5rem;
-  width: min(95%, 400px);
-  height: min(max-content, 75%);
+  gap: 1.5rem;
+  width: min(95%, 500px);
+  height: 85%;
   background: var(--color-bg-main);
   padding: 1em;
   outline: 1px solid var(--color-text-primary);
@@ -449,4 +450,52 @@ textarea, select {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+
+
+#player-stats, #solution-infos {
+  width: min(400px,100%);
+}
+
+.stats-row {
+  gap: 2.5%;
+  margin: 2.5% 0;
+}
+
+.stats-row > p {
+  border-radius: 10px;
+  outline: 1px solid var(--color-text-primary);
+  flex: 1;
+  padding: 2.5%;
+}
+
+.stats-row span {
+  font-size: 1.5rem;
+}
+
+#solution-infos-table, details {
+  width: 100%;
+}
+
+.solution-infos-table-attribute {
+  background: var(--color-bg-surface);
+}
+
+.solution-infos-table-value {
+  background: var(--color-border);
+}
+
+.solution-infos-table-row > td {
+  padding: 2.5%;
+}
+
+.end-game-controls {
+  width: 35px;
+  aspect-ratio: 1;
+  transition: 0.25s ease-in-out;
+}
+
+.end-game-controls-btn:hover > .end-game-controls {
+  transform: scale(1.1);
 }
