@@ -21,7 +21,7 @@ final class GameController {
     public function show($path) {
         $franchise = $this->franchiseRepository->findBySlug($path);
         $basePath = $this->basePath;
-        $startScript = false;
+        $pageType = 'Game';
 
         if(!$franchise || !$franchise->getActive()) {
             $title = 'Page Not Found - DLE Games';
@@ -55,7 +55,6 @@ final class GameController {
             throw new NotFoundException();
         }*/
         $columns = $gameConfig[0]['columns'];
-        $startScript = true;
 
         $charactersForGame = [];
         foreach($characters as $character) {

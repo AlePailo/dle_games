@@ -33,7 +33,6 @@ main {
 }
 
 .wrapper {
-  /*background-image: url("../img/backgrounds/detective_conan_bg.jpg");*/
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center top;
@@ -95,11 +94,12 @@ textarea, select {
 
 .franchise-grid {
   flex: 1 1 auto;
-  /*outline: 1px solid red;*/
   padding: 1.5em;
   margin: 0 auto;
-  max-width: 1200px;
+  width: 80%;
   display: grid;
+  align-content: start;
+  justify-items: center;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   grid-template-rows: min-content;
 }
@@ -137,18 +137,6 @@ textarea, select {
   position: relative;
 }
 
-/*.franchise-card__image-container::after {
-  content: "NEW";
-  background: var(--color-wrong);
-  position: absolute;
-  top: -10%;
-  right: -20%;
-  border-radius: 2.5px;
-  padding: 0.15rem;
-  font-size: 0.85em;
-}*/
-
-
 .franchise-card__badge {
   background: var(--color-wrong);
   position: absolute;
@@ -169,10 +157,6 @@ textarea, select {
 .disabled + h3 {
   opacity: 0.3;
 }
-
-/*.disabled::after {
-  content: "DISABLED";
-}*/
 
 .site-footer {
   flex: 0 1 auto;
@@ -233,7 +217,6 @@ textarea, select {
 .game-grid {
   flex: 1 1 auto;
   display: grid;
-  /*outline: 1px solid red;*/
   width: 100%;
 }
 
@@ -300,7 +283,7 @@ textarea, select {
   border-spacing: 0.75em;
 }
 
-.game-table th {
+table th {
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -309,8 +292,8 @@ textarea, select {
   padding: 0.75rem;
 }
 
-.game-table th,
-.game-table td {
+table th,
+table td {
   text-align: center;
   border-radius: 10px;
 }
@@ -321,8 +304,9 @@ textarea, select {
   font-weight: 800;
 }
 
-.table-cell img{
+table img {
   height: 100%;
+  aspect-ratio: 1;
   margin: 0 auto;
   border-radius: 10px;
 }
@@ -383,7 +367,7 @@ textarea, select {
   background-color: var(--color-wrong);
 }
 
-.game-recap {
+.popup-menu {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -398,7 +382,7 @@ textarea, select {
   overflow-y: auto;
 }
 
-.game-recap button {
+.popup-menu button {
   color: inherit;
   background: var(--color-border);
   outline: 1px solid var(--color-text-primary);
@@ -406,7 +390,7 @@ textarea, select {
   border-radius: 10px;
 }
 
-.game-recap img {
+.popup-menu img {
   border-radius: 10px;
 }
 
@@ -433,7 +417,7 @@ textarea, select {
   gap: 1rem;
 }
 
-#game-recap-container {
+.fullscreen-popup-container {
   z-index: 999;
   top: 0;
   bottom: 0;
@@ -488,6 +472,7 @@ a {
 
 .solution-infos-table-row > td {
   padding: 2.5%;
+  border-radius: 0;
 }
 
 .end-game-controls {
@@ -498,4 +483,48 @@ a {
 
 .end-game-controls-btn:hover > .end-game-controls {
   transform: scale(1.1);
+}
+
+
+#franchise-search-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+  border-radius: 10px;
+}
+
+.franchise-search {
+  position: relative;
+  width: 50%;
+}
+
+.franchise-search > svg {
+  height: 50%;
+  aspect-ratio: 1;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.header-container > svg {
+  aspect-ratio: 1;
+  height: 40px;
+  cursor: pointer;
+}
+
+.header-container {
+  justify-content: space-between;
+}
+
+
+
+.example-table-container {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.example-table {
+  border-spacing: 0.75em;
 }

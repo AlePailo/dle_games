@@ -18,10 +18,93 @@
 
 <main>
     <?= $content ?>
+    <div id="help-container" class="fullscreen-popup-container flex-center hidden">
+        <div class="popup-menu">
+            <h1>HOW TO PLAY</h1>
+            <div>
+                <p>Guess the hidden character.</p>
+                <p>Each guess will reveal how close you are:</p>
+                <p>🟩 Green means the attribute matches.</p>
+                <p>🟥 Red means it does not match.</p>
+                <p>Use previous guesses to narrow down the possibilities.</p>
+            </div>
+            <div>
+                <h3>EXAMPLE:</h3>
+                <div class="example-table-container">
+                    <table class="example-table">
+                        <thead>
+                            <tr>
+                                <th>IMAGE</th>
+                                <th>NAME</th>
+                                <th>GENDER</th>
+                                <th>AGE</th>
+                                <th>HAIR COLOR</th>
+                                <th>EYES COLOR</th>
+                                <th>AFFILIATION</th>
+                                <th>ROLE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell"><img src="<?= $basePath ?>/assets/img/characters_icons/Heiji_Hattori.jpg" alt=""></td>
+                                <td class="table-cell wrong">Heiji Hattori</td>
+                                <td class="table-cell correct">Male</td>
+                                <td class="table-cell wrong">Teen</td>
+                                <td class="table-cell correct">Brown</td>
+                                <td class="table-cell correct">Blue</td>
+                                <td class="table-cell wrong">Kaiho High School</td>
+                                <td class="table-cell correct">Detective</td>
+                                <td class="table-cell correct">Alive</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="example-table-container">
+                    <table class="example-table">
+                        <thead>
+                            <tr>
+                                <th>IMAGE</th>
+                                <th>NAME</th>
+                                <th>GENDER</th>
+                                <th>AGE</th>
+                                <th>HAIR COLOR</th>
+                                <th>EYES COLOR</th>
+                                <th>AFFILIATION</th>
+                                <th>ROLE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-cell"><img src="<?= $basePath ?>/assets/img/characters_icons/Conan_Edogawa.jpg" alt=""></td>
+                                <td class="table-cell correct">Conan Edogawa</td>
+                                <td class="table-cell correct">Male</td>
+                                <td class="table-cell correct">Child</td>
+                                <td class="table-cell correct">Brown</td>
+                                <td class="table-cell correct">Blue</td>
+                                <td class="table-cell correct">Teitan Elementary</td>
+                                <td class="table-cell correct">Detective</td>
+                                <td class="table-cell correct">Alive</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <button id="close-help-menu-btn">CLOSE</button>
+        </div>
+    </div>
 </main>
 
 <?php require __DIR__ . '/../partials/footer.php'; ?>
 </div>
 </body>
-<?php if ($startScript) : ?> <script src="assets/js/script.js"></script> <?php endif; ?>
+<?php 
+    echo '<script src="assets/js/helpMenu.js"></script>';
+    if($pageType === 'Game') {
+        echo '<script src="assets/js/game.js"></script>';
+    } elseif($pageType === 'Home') {
+        echo '<script src="assets/js/home.js"></script>';
+    }
+?>
 </html>
