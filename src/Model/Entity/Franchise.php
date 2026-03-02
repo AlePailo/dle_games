@@ -8,32 +8,38 @@ final class Franchise {
     private string $name;
     private string $slug;
     private string $description;
-    private bool $active;
+    /*private bool $active;*/
+    private bool $isActive;
     private string $icon_url;
     private string $bg_image_url;
     private string $created_at;     //gestire meglio il type
     private string $updated_at;     //gestire meglio il type
+    private array $attributeDefinitions;
 
     public function __construct(
         int $id,
         string $name,
         string $slug,
         string $description,
-        bool $active,
+        /*bool $active,*/
+        bool $isActive,
         string $icon_url,
         string $bg_image_url,
         string $created_at,
-        string $updated_at
+        string $updated_at,
+        array $attributeDefinitions
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->slug = $slug;
         $this->description = $description;
-        $this->active = $active;
+        /*$this->active = $active;*/
+        $this->isActive = $isActive;
         $this->icon_url = $icon_url;
         $this->bg_image_url = $bg_image_url;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->attributeDefinitions = $attributeDefinitions;
     }
 
     public function getId() {
@@ -52,8 +58,12 @@ final class Franchise {
         return $this->description;
     }
 
-    public function getActive() {
+    /*public function getActive() {
         return $this->active;
+    }*/
+
+    public function getIsActive() {
+        return $this->isActive;
     }
 
     public function getIconUrl() {
@@ -70,6 +80,10 @@ final class Franchise {
 
     public function getUpdatedAt() {
         return $this->updated_at;
+    }
+
+    public function getAttributeDefinitions() : array {
+        return $this->attributeDefinitions;
     }
 
     public function isNew($days = 30) {

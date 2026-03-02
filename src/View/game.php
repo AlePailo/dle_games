@@ -27,8 +27,8 @@
     <table class="game-table">
         <thead>
             <tr>
-                <?php foreach ($columns as $label): ?>
-                    <th class=""><?= htmlspecialchars($label) ?></th>
+                <?php foreach ($columns as $column): ?>
+                    <th class=""><?= htmlspecialchars($column['label']) ?></th>
                 <?php endforeach ?>
             </tr>
         </thead>

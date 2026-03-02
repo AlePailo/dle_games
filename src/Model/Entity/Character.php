@@ -4,40 +4,42 @@ namespace App\Model\Entity;
 
 final class Character {
 
-    //private int $id;
     private string $name;
-    private string $gender;
+    /*private string $gender;
     private string $age;
     private string $hairColor;
     private string $eyesColor;
     private string $affiliation;
     private string $role;
-    private string $status;
+    private string $status;*/
     private string $imageUrl;
+    private array $attributes;
 
     
     public function __construct(
         //int $id,
         string $name,
-        string $gender,
+        /*string $gender,
         string $age,
         string $hairColor,
         string $eyesColor,
         string $affiliation,
         string $role,
-        string $status,
-        string $imageUrl
+        string $status,*/
+        string $imageUrl,
+        array $attributes
     ) {
         //$this->id = $id;
         $this->name = $name;
-        $this->gender = $gender;
+        /*$this->gender = $gender;
         $this->age = $age;
         $this->hairColor = $hairColor;
         $this->eyesColor = $eyesColor;
         $this->affiliation = $affiliation;
         $this->role = $role;
-        $this->status = $status;
+        $this->status = $status;*/
         $this->imageUrl = $imageUrl;
+        $this->attributes = $attributes;
     }
 
     /*public function getId() : int {
@@ -48,7 +50,7 @@ final class Character {
         return $this->name;
     }
 
-    public function getGender() : string {
+   /* public function getGender() : string {
         return $this->gender;
     }
 
@@ -74,10 +76,21 @@ final class Character {
 
     public function getStatus() : string {
         return $this->status;
-    }
+    }*/
 
     public function getImageUrl() : string {
         return $this->imageUrl;
     }
 
+    public function getAttributes() : array {
+        return $this->attributes;
+    }
+
+    public function getAttribute(string $key) : string {
+        return $this->attributes[$key] ?? null;
+    }
+
+    public function hasAttribute(string $key) : bool {
+        return array_key_exists($key, $this->attributes);
+    }
 }
