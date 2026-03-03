@@ -1,4 +1,3 @@
-<!--<section class="home">-->
 <h1 class="home__title">Choose a game</h1>
 <div class="franchise-search">
     <input type="text" name="franchise-search" id="franchise-search-input" placeholder="Search for a franchise...">
@@ -10,8 +9,8 @@
 <div class="franchise-grid">
     <?php foreach($franchisesList as $franchise): ?>
 
-    <?php 
-        $isActive = $franchise->getActive();
+    <?php
+        $isActive = $franchise->getIsActive();
         $isNew = $franchise->isNew();
 
         $imgContainerClasses = 'franchise-card__image-container';
@@ -40,4 +39,3 @@
         </<?= $tag ?>>
     <?php endforeach; ?>
 </div>
-<!--</section>-->

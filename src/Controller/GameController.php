@@ -19,43 +19,35 @@ final class GameController {
     }
 
     public function show($path) {
-        $franchise = $this->franchiseRepository->findBySlug($path);
-        $basePath = $this->basePath;
-        $pageType = 'Game';
 
-        if(!$franchise || /*!$franchise->getActive()*/ !$franchise->getIsActive()) {
+        // Load targeted franchise
+        $franchise = $this->franchiseRepository->findBySlug($path);
+
+        /* ----------------------------- INSERT CHECK IF ATTRIBUTE DEFINITIONS ARE LOADED ------------------------------------ */
+
+        // Load 404 page if franchise not found or inactive
+        if(!$franchise || !$franchise->getIsActive()) {
             $title = 'Page Not Found - DLE Games';
             ob_start();
             require __DIR__ . '/../View/404.php';
             $content = ob_get_clean();
+
             require __DIR__ . '/../View/layouts/main.php';
 
             return;
         }
 
-        /*if(!$franchise->getActive()) {
-            ob_start();
-            require __DIR__ . '/../View/comingSoon.php';
-            $content = ob_get_clean();
-            require __DIR__ . '/../View/layouts/main.php';
-
-            return;
-        }*/
-
-        $characters = $this->characterRepository->findByFranchiseId($franchise->getId());
-
+        // Dynamic page details
         $title = $franchise->getName() . ' - DLE Games';
         $metaDescription = $franchise->getDescription();
-        $slug = $franchise->getSlug();
         $gameBackground = $franchise->getBgImageUrl();
-        
-        /*$config = require __DIR__ . '/../../config/games.php';
-        $gameConfig = [$config[$franchise->getSlug()]] ?? null;
-        if(!$gameConfig) {
-            throw new NotFoundException();
-        }
-        $columns = $gameConfig[0]['columns'];
-        */
+        $pageType = 'Game';
+
+
+        // Prepare data that will be passed to frontend for game logic purpose
+        $characters = $this->characterRepository->findByFranchiseId($franchise->getId());   // Get all targeted franchise characters
+        $basePath = $this->basePath;
+        $slug = $franchise->getSlug();
 
         $columns = [
             ['key' => 'image_url', 'label' => 'Image'],
@@ -71,12 +63,6 @@ final class GameController {
         $charactersForGame = [];
         foreach($characters as $character) {
             $data = [];
-            /*foreach(array_keys($columns) as $field) {
-                $getter = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
-                if (method_exists($character, $getter)) {
-                    $data[$field] = $character->$getter();
-                }
-            }*/
 
             foreach($columns as $field) {
                 if(array_key_exists($field['key'], $character->getAttributes())) {
@@ -98,5 +84,13 @@ final class GameController {
 
         require __DIR__ . '/../View/layouts/main.php';
     }
+
+    /*public function injectInMainLayout(string $filePath) : void {
+        ob_start();
+        require __DIR__ . $filePath;
+        $content = ob_get_clean();
+
+        require __DIR__ . '/../View/layouts/main.php';
+    }*/
 
 }
