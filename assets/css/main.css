@@ -347,7 +347,7 @@ table img {
   /*transition: all 0.25s ease;*/
 }
 
-.suggestion:hover {
+.suggestion.selected {
   color: var(--color-text-primary);
   background: var(--color-border);
 }

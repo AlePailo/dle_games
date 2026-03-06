@@ -3,6 +3,7 @@ $(document).ready(function() {
     //localStorage.removeItem('dle_games_savedGames')
     console.log(localStorage)
     const { characters, columns, basePath } = GAME_DATA
+    GAME_DATA.suggestionsIndex = -1
     
     const savedGame = getSavedGame(GAME_DATA.gameSlug)
 
@@ -14,7 +15,20 @@ $(document).ready(function() {
 
     const $suggestions = $('.suggestions')
     const $textInput = $('#game-text-input')
-    
+
+    $('body').on('mouseenter', '.suggestion', function () {
+        $('.suggestion').removeClass('selected')
+        $(this).addClass('selected')
+        GAME_DATA.suggestionsIndex = -1
+    })
+
+    $('body').on('keydown', '#game-text-input', function(e) {
+        if(e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault()
+            return
+        }
+    })
+
     $('body').on('keyup', '#game-text-input', function(e) {
         let currentVal = $(this).val()
 
@@ -24,12 +38,25 @@ $(document).ready(function() {
             return
         }
 
-        if(e.key === 'Enter' || e.keyCode === 13) {
+        if(e.key === 'Enter') {
+            const $items = $suggestions.children()
+            console.log(GAME_DATA.suggestionsIndex)
+            if(GAME_DATA.suggestionsIndex >= 0) {
+                const selectedSuggestion = $items.eq(GAME_DATA.suggestionsIndex)
+                handleGuessInput($textInput, $suggestions, characters, basePath, selectedSuggestion)
+                return
+            }
             handleGuessInput($textInput, $suggestions, characters, basePath)
             return
         }
 
-        
+        if(e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault()
+            handleArrowNavigation(e, $suggestions)
+            return
+        }
+        GAME_DATA.suggestionsIndex = -1
+
         $suggestions.empty()
         $('.x').show()
         const matches = findMatches(GAME_DATA.charactersClone, currentVal)
@@ -137,6 +164,7 @@ function showSuggestions() {
 function hideSuggestions() {
     $('.suggestions').empty()
     $('.suggestions').hide()
+    GAME_DATA.suggestionsIndex = -1
 }
 
 function startGame(characters) {
@@ -294,9 +322,10 @@ function removeSavedGame(slug) {
 
 
 
-function handleGuessInput(inputTextBox, suggestions, characters, basePath) {
-    let guess = suggestions.children(':first').children('p').text()
-    if(!guess) return
+function handleGuessInput(inputTextBox, suggestions, characters, basePath, guess = suggestions.children().eq(0)) {
+    guess = guess.children().text()
+    console.log('sium')
+
     tryGuess(guess, characters, GAME_DATA.charactersClone, GAME_DATA.gameState.solution, basePath)
     inputTextBox.val('')
     inputTextBox.focus()
@@ -338,4 +367,38 @@ function buildSolutionTable() {
         $row.append($attr, $value)
         $solutionTable.append($row)
     }
+}
+
+function handleArrowNavigation (e, $suggestions) {
+    const $items = $suggestions.children()
+    if($items.length === 0) return
+
+    if(e.key === "ArrowDown") {
+        let newIndex = GAME_DATA.suggestionsIndex + 1
+        if(newIndex >= $items.length) newIndex = 0
+
+        updateSuggestionSelection($suggestions, newIndex)
+    } 
+    if(e.key === "ArrowUp") {
+        let newIndex = GAME_DATA.suggestionsIndex - 1
+        if(newIndex < 0) newIndex = $items.length - 1
+        
+        updateSuggestionSelection($suggestions, newIndex)
+    }
+}
+
+function updateSuggestionSelection($suggestions, newIndex) {
+    const $items = $suggestions.children()
+    
+    $items.eq(newIndex)[0].scrollIntoView({
+        block: 'nearest'
+    })
+
+    $items.removeClass('selected')
+    
+    if(newIndex >= 0 && newIndex < $items.length) {
+        $items.eq(newIndex).addClass('selected')
+    }
+
+    GAME_DATA.suggestionsIndex = newIndex
 }
