@@ -34,13 +34,12 @@ $(document).ready(function() {
 
         if(currentVal === '') {
             hideSuggestions()
-            $('.x').hide()
+            $('.game-text-input-clear').hide()
             return
         }
 
         if(e.key === 'Enter') {
             const $items = $suggestions.children()
-            console.log(GAME_DATA.suggestionsIndex)
             if(GAME_DATA.suggestionsIndex >= 0) {
                 const selectedSuggestion = $items.eq(GAME_DATA.suggestionsIndex)
                 handleGuessInput($textInput, $suggestions, characters, basePath, selectedSuggestion)
@@ -58,7 +57,7 @@ $(document).ready(function() {
         GAME_DATA.suggestionsIndex = -1
 
         $suggestions.empty()
-        $('.x').show()
+        $('.game-text-input-clear').show()
         const matches = findMatches(GAME_DATA.charactersClone, currentVal)
         buildAutoComplete(GAME_DATA.charactersClone, matches, basePath, $suggestions)
     })
@@ -72,7 +71,7 @@ $(document).ready(function() {
         tryGuess($(this).text(), characters, GAME_DATA.charactersClone, GAME_DATA.gameState.solution, basePath)
         $textInput.val('')
         $textInput.focus()
-        $('.x').hide()
+        $('.game-text-input-clear').hide()
     })
 
     $(document).on('click', function (e) {
@@ -84,10 +83,10 @@ $(document).ready(function() {
     })
 
 
-    $('body').on('click', '.x', function() {
+    $('body').on('click', '.game-text-input-clear', function() {
         $('#game-text-input').val('')
         hideSuggestions()
-        $('.x').hide()
+        $('.game-text-input-clear').hide()
     })
 
 
@@ -96,10 +95,10 @@ $(document).ready(function() {
         $suggestions.empty()
         let currentVal = $(this).val()
         if(currentVal === '') {
-            $('.x').hide()
+            $('.game-text-input-clear').hide()
             return
         }
-        $('.x').show()
+        $('.game-text-input-clear').show()
         const matches = findMatches(characters, currentVal)
         buildAutoComplete(characters, matches, basePath, $suggestions)
     })
@@ -130,17 +129,38 @@ function buildAutoComplete(characters, matches, basePath, $suggestions) {
 
     if(!matches.length) {
         console.log("No matches")
-        const $noSuggestions = $('<p></p>').text('No matches').addClass('no-suggestions')
+        const $noSuggestions = $('<p></p>')
+            .text('No matches')
+            .addClass('no-suggestions')
         $suggestions.append($noSuggestions)
         return
     }
 
     matches.forEach(char => {
-        const $suggestion = $('<div></div>').addClass('suggestion')
-        const $image = $('<img>').attr('src', `${basePath}/assets/img/characters_icons/${characters[char].image_url}`)
-        const $name = $('<p></p>').text(characters[char].name)
-        $suggestion.append($image)
-        $suggestion.append($name)
+        const charName = characters[char].name
+
+        const $suggestion = $('<div></div>')
+            .addClass('suggestion')
+            .attr({
+                role: 'option',
+                id: `suggestion-${char}`,
+                'data-name': charName,
+                'aria-selected': 'false',
+                'aria-label': charName
+            })
+
+        const $image = $('<img>')
+            .attr({
+                src: `${basePath}/assets/img/characters_icons/${GAME_DATA.gameSlug}/${characters[char].image_url}`,
+                alt: '',
+                'aria-hidden': 'true'
+            })
+
+        const $name = $('<p></p>')
+            .text(charName)
+            .attr('aria-hidden', 'true')
+
+        $suggestion.append($image, $name)
         $suggestions.append($suggestion)
     })
 }
@@ -148,7 +168,7 @@ function buildAutoComplete(characters, matches, basePath, $suggestions) {
 function tryGuess(charName, characters, charactersClone, randomChar, basePath) {
     buildGuessUI(charName, randomChar, characters, basePath)
     delete charactersClone[charName]
-    $('.guesses').prepend($guessRow)
+    $('.game-table__guesses').prepend($guessRow)
     hideSuggestions()
     if($('#giveup-btn').attr('disabled')) $('#giveup-btn').attr('disabled', false)
 
@@ -159,16 +179,19 @@ function tryGuess(charName, characters, charactersClone, randomChar, basePath) {
 function showSuggestions() {
     $('.suggestions').show()
     $('.suggestions').scrollTop(0)
+    $('#game-text-input').attr('aria-expanded', 'true')
 }
 
 function hideSuggestions() {
     $('.suggestions').empty()
     $('.suggestions').hide()
+    $('#game-text-input').attr('aria-expanded','false')
+        .attr('aria-activedescendant','')
     GAME_DATA.suggestionsIndex = -1
 }
 
 function startGame(characters) {
-    $('.guesses').empty()
+    $('.game-table__guesses').empty()
     $('#game-text-input').val('')
     $('#game-recap-container').addClass('hidden')
     GAME_DATA.stats = getStats()
@@ -253,7 +276,7 @@ function endGame(slug, result, guessesCount) {
 function generateRecap(stats) {
     const solution = GAME_DATA.gameState.solution
     $('#solution-name span').text(solution.name)
-    $('#solution-img').attr('src', `${GAME_DATA.basePath}/assets/img/characters_icons/${solution.image_url}`)
+    $('#solution-img').attr('src', `${GAME_DATA.basePath}/assets/img/characters_icons/${GAME_DATA.gameSlug}/${solution.image_url}`)
 
     Array.from($('.stats-row').children('p')).forEach(p => $(p).children('span').text(stats[$(p).attr('data-stats-link')]))
     $('#game-recap-container').removeClass('hidden')
@@ -290,7 +313,7 @@ function restoreGame(gameState, characters, basePath) {
 
     guesses.forEach(guess => {
         buildGuessUI(guess, GAME_DATA.gameState.solution, characters, basePath)
-        $('.guesses').prepend($guessRow)
+        $('.game-table__guesses').prepend($guessRow)
         hideSuggestions()
         if($('#giveup-btn').attr('disabled')) $('#giveup-btn').attr('disabled', false)
     })
@@ -323,33 +346,35 @@ function removeSavedGame(slug) {
 
 
 function handleGuessInput(inputTextBox, suggestions, characters, basePath, guess = suggestions.children().eq(0)) {
-    guess = guess.children().text()
-    console.log('sium')
+    guess = guess.data('name')
 
     tryGuess(guess, characters, GAME_DATA.charactersClone, GAME_DATA.gameState.solution, basePath)
     inputTextBox.val('')
     inputTextBox.focus()
-    $('.x').hide()
+    $('.game-text-input-clear').hide()
 }
 
 
 function buildGuessUI(charName, solution, characters, basePath) {
     $guessRow = $('<tr></tr>')
-        for(attribute in characters[charName]){
-            if(attribute === 'image_url') {
-                $img = $('<img>').attr('src', `${basePath}/assets/img/characters_icons/${characters[charName][attribute]}`)
-                $attribute = $('<td></td>').addClass('table-cell')
+        Object.entries(characters[charName]).forEach(([attribute, value], index) => {
+            const delay = index * 100;
+            const $attribute = $('<td></td>')
+
+            if (attribute === 'image_url') {
+                const $img = $('<img>').attr('src', `${basePath}/assets/img/characters_icons/${GAME_DATA.gameSlug}/${value}`)
+                console.log(`${basePath}/assets/img/characters_icons/${GAME_DATA.gameSlug}/${value}`)
+                $attribute.addClass('table-cell')
                 $attribute.append($img)
             } else {
-                $attribute = $('<td></td>').addClass('table-cell').text(characters[charName][attribute])
-                if(characters[charName][attribute] === solution[attribute]) {
-                    $attribute.addClass('correct')
-                } else {
-                    $attribute.addClass('wrong')
-                }
+                $attribute.addClass('table-cell').text(value)
+                const result = (value === solution[attribute]) ? 'correct' : 'wrong'
+                $attribute.attr('data-guess-result', result)
             }
+
+            $attribute.css('animation-delay', `${delay}ms`)
             $guessRow.append($attribute)
-        }
+        })
 }
 
 
@@ -395,9 +420,13 @@ function updateSuggestionSelection($suggestions, newIndex) {
     })
 
     $items.removeClass('selected')
+        .attr('aria-selected', 'false')
     
     if(newIndex >= 0 && newIndex < $items.length) {
         $items.eq(newIndex).addClass('selected')
+            .attr('aria-selected', 'false')
+        
+        $('#game-text-input').attr('aria-activedescendant', $items.eq(newIndex).attr('id'))
     }
 
     GAME_DATA.suggestionsIndex = newIndex

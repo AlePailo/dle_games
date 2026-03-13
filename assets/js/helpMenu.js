@@ -5,8 +5,10 @@ $(document).ready(function() {
 
 function showHelpMenu() {
     $('#help-container').removeClass('hidden')
+    $('#open-help-menu-btn').attr('aria-expanded', 'true')
 }
 
 function hideHelpMenu() {
     $('#help-container').addClass('hidden')
+    $('#open-help-menu-btn').attr('aria-expanded', 'false')
 }

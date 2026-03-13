@@ -1,41 +1,71 @@
-<h1 class="home__title">Choose a game</h1>
-<div class="franchise-search">
-    <input type="text" name="franchise-search" id="franchise-search-input" placeholder="Search for a franchise...">
-    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0,0,256,256">
-        <g fill="var(--color-bg-main)" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M21,3c-9.39844,0 -17,7.60156 -17,17c0,9.39844 7.60156,17 17,17c3.35547,0 6.46094,-0.98437 9.09375,-2.65625l12.28125,12.28125l4.25,-4.25l-12.125,-12.09375c2.17969,-2.85937 3.5,-6.40234 3.5,-10.28125c0,-9.39844 -7.60156,-17 -17,-17zM21,7c7.19922,0 13,5.80078 13,13c0,7.19922 -5.80078,13 -13,13c-7.19922,0 -13,-5.80078 -13,-13c0,-7.19922 5.80078,-13 13,-13z"></path></g></g>
+<h1 class="home__title visually-hidden">Select a franchise to start guessing</h1>
+<form class="franchise-search" role="search">
+    <label for="franchise-search-input" class="visually-hidden">Search Franchise</label>
+    <input type="text" name="franchise-search-input" id="franchise-search-input" placeholder="Search for a franchise..." autocomplete="off">
+    <svg aria-hidden="true" viewBox="0 0 50 50">
+        <path fill="#000" d="M21,3c-9.398,0-17,7.602-17,17s7.602,17,17,17c3.355,0,6.461-0.984,9.094-2.656l12.281,12.281l4.25-4.25L34.5,27.281C36.68,24.422,38,20.879,38,17C38,7.602,30.398,3,21,3z M21,7c7.199,0,13,5.801,13,13s-5.801,13-13,13s-13-5.801-13-13S13.801,7,21,7z"/>
     </svg>
-</div>
+</form>
 
-<div class="franchise-grid">
-    <?php foreach($franchisesList as $franchise): ?>
+<ul class="franchise-grid" role="list">
 
-    <?php
+    <?php foreach ($franchisesList as $franchise): 
+
+        $name = htmlspecialchars($franchise->getName());
+        $slug = htmlspecialchars($franchise->getSlug());
+        $icon = htmlspecialchars($franchise->getIconUrl());
+
         $isActive = $franchise->getIsActive();
         $isNew = $franchise->isNew();
 
-        $imgContainerClasses = 'franchise-card__image-container';
-        
-        if($isActive) {
-            $tag = 'a';
-            $href = $basePath . '/' . htmlspecialchars($franchise->getSlug());
-            if($isNew) {
-                $badgeText = 'NEW';
-            }
-        } else {
-            $tag = 'div';
-            $imgContainerClasses .= ' disabled';
-            $badgeText = 'DISABLED';
-        }
+        $url = $basePath . '/' . $slug;
+
+        $tag = $isActive ? 'a' : 'div';
+
+        $attributes = $isActive
+            ? 'href="' . $url . '" aria-label="Play ' . $name . '"'
+            : 'aria-disabled="true"';
+
     ?>
 
-        <<?= $tag ?> class="franchise-card" <?= $isActive ? 'href="' . $href . '"' : '' ?>>
-            <div class="<?= $imgContainerClasses ?>">
-                <?php if($isNew || !$isActive): ?>
-                    <span class="franchise-card__badge"><?= $badgeText ?></span>
-                <?php endif; ?>
-                <img class="franchise-card__image" src="<?= $basePath ?>/assets/img/games_icons/<?= htmlspecialchars($franchise->getIconUrl()) ?>" alt="<?= htmlspecialchars($franchise->getName()) ?>" loading="lazy">
-            </div>
-            <h3 class="franchise-card__name"><?= htmlspecialchars(strtoupper($franchise->getName())) ?></h3>
-        </<?= $tag ?>>
+        <li class="franchise-grid__item">
+
+                <<?= $tag ?>
+                    class="franchise-card <?= !$isActive ? 'disabled' : '' ?>"
+                    <?= $attributes ?>
+                >
+
+                    <div class="franchise-card__image-container">
+
+                        <?php if ($isNew): ?>
+                            <span class="franchise-card__badge" aria-label="New game">
+                                NEW
+                            </span>
+                        <?php endif; ?>
+
+                        <?php if (!$isActive): ?>
+                            <span class="franchise-card__badge" aria-label="Game disabled">
+                                DISABLED
+                            </span>
+                        <?php endif; ?>
+
+                        <img
+                            class="franchise-card__image"
+                            src="<?= $basePath ?>/assets/img/games_icons/<?= $icon ?>"
+                            alt=""
+                            loading="lazy"
+                        >
+
+                    </div>
+
+                    <h3 class="franchise-card__name">
+                        <?= strtoupper($name) ?>
+                    </h3>
+
+                </<?= $tag ?>>
+
+        </li>
+
     <?php endforeach; ?>
-</div>
+
+</ul>
