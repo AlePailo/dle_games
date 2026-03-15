@@ -179,6 +179,7 @@ main {
 }
 
 #giveup-btn {
+  width: 50%;
   background: var(--color-wrong);
   padding: 0.5em;
   color: inherit;
@@ -195,7 +196,7 @@ main {
   position: relative;
   width: min(95%, 600px);
   outline: 1px solid var(--color-text-primary);
-  padding: 1.25em 2em;
+  padding: 1em;
   border-radius: 10px;
   gap: 1em;
 }
@@ -227,6 +228,9 @@ main {
 }
 
 .game-text-input-clear {
+  color: inherit;
+  border: 0;
+  background: inherit;
   display: none;
   position: absolute;
   right: 0.5em;

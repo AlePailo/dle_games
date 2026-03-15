@@ -7,7 +7,7 @@
     </svg>
 </form>
 
-<ul class="franchise-grid" role="list">
+<ul class="franchise-grid" role="list" aria-live="polite">
 
     <?php foreach ($franchisesList as $franchise): 
 
@@ -28,7 +28,7 @@
 
     ?>
 
-        <li class="franchise-grid__item">
+        <li class="franchise-grid__item" data-name="<?= strtolower($name) ?>">
 
                 <<?= $tag ?>
                     class="franchise-card <?= !$isActive ? 'disabled' : '' ?>"
