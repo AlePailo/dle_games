@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\Repository\CharacterRepository;
 use App\Model\Repository\FranchiseRepository;
+use App\Model\Entity\Franchise;
 use PDO;
 
 final class GameController {
@@ -18,37 +19,48 @@ final class GameController {
         $this->basePath = $basePath;
     }
 
-    public function show($path) {
 
+    public function show(string $path) : void {
         // Load targeted franchise
         $franchise = $this->franchiseRepository->findBySlug($path);
 
-        /* ----------------------------- INSERT CHECK IF ATTRIBUTE DEFINITIONS ARE LOADED ------------------------------------ */
-
-        // Load 404 page if franchise not found or inactive
         if(!$franchise || !$franchise->getIsActive()) {
-            $title = 'Page Not Found - DLE Games';
-            ob_start();
-            require __DIR__ . '/../View/404.php';
-            $content = ob_get_clean();
-
-            require __DIR__ . '/../View/layouts/main.php';
-
+            $this->render404();
             return;
         }
 
-        // Dynamic page details
+        $this->renderGame($franchise);
+    }    
+
+
+    private function render404() : void {
+        $title = 'Page Not Found - DLE Games';
+        ob_start();
+        require __DIR__ . '/../View/404.php';
+        $content = ob_get_clean();
+
+        require __DIR__ . '/../View/layouts/main.php';
+    }
+
+    private function renderGame(Franchise $franchise) : void {
         $title = $franchise->getName() . ' - DLE Games';
         $metaDescription = $franchise->getDescription();
         $gameBackground = $franchise->getBgImageUrl();
         $pageType = 'Game';
 
-
-        // Prepare data that will be passed to frontend for game logic purpose
-        $characters = $this->characterRepository->findByFranchiseId($franchise->getId());   // Get all targeted franchise characters
+        $columns = $this->buildColumns($franchise);
+        $characters = $this->characterRepository->findByFranchiseId($franchise->getId());
+        $charactersForGame = $this->buildCharactersData($characters, $columns);
         $basePath = $this->basePath;
         $slug = $franchise->getSlug();
 
+        ob_start();
+        require __DIR__ . '/../View/game.php';
+        $content = ob_get_clean();
+        require __DIR__ . '/../View/layouts/main.php';
+    }
+
+    private function buildColumns(Franchise $franchise) : array {
         $columns = [
             ['key' => 'image_url', 'label' => 'Image'],
             ['key' => 'name', 'label' => 'Name']
@@ -60,37 +72,27 @@ final class GameController {
             ];
         }
 
-        $charactersForGame = [];
-        foreach($characters as $character) {
-            $data = [];
-
-            foreach($columns as $field) {
-                if(array_key_exists($field['key'], $character->getAttributes())) {
-                    $data[$field['key']] = $character->getAttributes()[$field['key']];
-                } else {
-                    $getter = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field['key'])));
-                    if(method_exists($character, $getter)) {
-                        $data[$field['key']] = $character->$getter();
-                    } 
-                }
-            }
-
-            $charactersForGame[$character->getName()] = $data;
-        }
-
-        ob_start();
-        require __DIR__ . '/../View/game.php';
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../View/layouts/main.php';
+        return $columns;
     }
 
-    /*public function injectInMainLayout(string $filePath) : void {
-        ob_start();
-        require __DIR__ . $filePath;
-        $content = ob_get_clean();
+    private function buildCharactersData(array $characters, array $columns) : array {
+        $result = [];
 
-        require __DIR__ . '/../View/layouts/main.php';
-    }*/
+        foreach ($characters as $character) {
+            $data = [];
+            foreach ($columns as $field) {
+                $key = $field['key'];
+                if($character->hasAttribute($key)) {
+                    $data[$key] = $character->getAttribute($key);
+                } elseif($key === 'name') {
+                    $data[$key] = $character->getName();
+                } elseif($key === 'image_url') {
+                    $data[$key] = $character->getImageUrl();
+                }
+            }
+            $result[$character->getName()] = $data;
+        }
 
+        return $result;
+    }
 }

@@ -1,0 +1,69 @@
+:root {
+    --black-primary: #0A0A0A;
+    --black-secondary: #141414;
+    --black-interactive: #2A2A2A;
+
+    --white-primary: #FAFAFA;
+    --gray-primary: #B5B5B5;
+
+    --red-primary: #B10008;
+    --yellow-primary: #F1C40F;   /* For future implementation */
+    --green-primary: #0C7935;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+img,
+picture {
+    max-width: 100%;
+    display: block;
+}
+
+input, button,
+textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+body {
+    min-height: 100svh;
+    font-family: "Roboto", sans-serif;
+    line-height: 1.5;
+    background: var(--black-primary);
+    color: var(--white-primary);
+}
+
+main {
+    width: min(1500px, 100%);
+    min-width: 0;
+    justify-self: center;
+    gap: 2.5rem;
+}
+
+
+
+/* 404 page */
+.not-found-section {
+  gap: 2em;
+  font-size: 1.5em;
+}
+
+.not-found-image {
+  width: 500px;
+  aspect-ratio: 1;
+}

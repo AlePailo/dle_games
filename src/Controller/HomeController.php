@@ -15,7 +15,7 @@ final class HomeController {
         $this->basePath = $basePath;
     }
 
-    public function getAllFranchises() {
+    public function getAllFranchises() : void {
         $franchisesList = $this->franchiseRepository->getAll();
 
         $basePath = $this->basePath;

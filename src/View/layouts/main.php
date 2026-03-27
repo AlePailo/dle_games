@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= htmlspecialchars($title ?? 'DLE Games') ?></title>
 
-    <?php if (!empty($metaDescription)): ?>
+    <?php if(!empty($metaDescription)): ?>
         <meta name="description" content="<?= htmlspecialchars($metaDescription) ?>">
     <?php endif; ?>
 
     <link rel="stylesheet" href="assets/css/main.css">
+    <?php if($pageType === 'Home'): ?>
+        <link rel="stylesheet" href="assets/css/home.css">
+    <?php elseif($pageType === 'Game'): ?>
+        <link rel="stylesheet" href="assets/css/game.css">
+    <?php endif; ?>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
@@ -51,14 +57,14 @@
                                 <tbody>
                                     <tr>
                                         <td class="table-cell"><img src="<?= $basePath ?>/assets/img/characters_icons/detective-conan/Heiji_Hattori.jpg" alt=""></td>
-                                        <td class="table-cell wrong">Heiji Hattori</td>
-                                        <td class="table-cell correct">Male</td>
-                                        <td class="table-cell wrong">Teen</td>
-                                        <td class="table-cell correct">Brown</td>
-                                        <td class="table-cell correct">Blue</td>
-                                        <td class="table-cell wrong">Kaiho High School</td>
-                                        <td class="table-cell correct">Detective</td>
-                                        <td class="table-cell correct">Alive</td>
+                                        <td class="table-cell" data-guess-result="wrong">Heiji Hattori</td>
+                                        <td class="table-cell" data-guess-result="correct">Male</td>
+                                        <td class="table-cell" data-guess-result="wrong">Teen</td>
+                                        <td class="table-cell" data-guess-result="correct">Brown</td>
+                                        <td class="table-cell" data-guess-result="correct">Blue</td>
+                                        <td class="table-cell" data-guess-result="wrong">Kaiho High School</td>
+                                        <td class="table-cell" data-guess-result="correct">Detective</td>
+                                        <td class="table-cell" data-guess-result="correct">Alive</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -81,14 +87,14 @@
                                 <tbody>
                                     <tr>
                                         <td class="table-cell"><img src="<?= $basePath ?>/assets/img/characters_icons/detective-conan/Conan_Edogawa.jpg" alt=""></td>
-                                        <td class="table-cell correct">Conan Edogawa</td>
-                                        <td class="table-cell correct">Male</td>
-                                        <td class="table-cell correct">Child</td>
-                                        <td class="table-cell correct">Brown</td>
-                                        <td class="table-cell correct">Blue</td>
-                                        <td class="table-cell correct">Teitan Elementary</td>
-                                        <td class="table-cell correct">Detective</td>
-                                        <td class="table-cell correct">Alive</td>
+                                        <td class="table-cell" data-guess-result="correct">Conan Edogawa</td>
+                                        <td class="table-cell" data-guess-result="correct">Male</td>
+                                        <td class="table-cell" data-guess-result="correct">Child</td>
+                                        <td class="table-cell" data-guess-result="correct">Brown</td>
+                                        <td class="table-cell" data-guess-result="correct">Blue</td>
+                                        <td class="table-cell" data-guess-result="correct">Teitan Elementary</td>
+                                        <td class="table-cell" data-guess-result="correct">Detective</td>
+                                        <td class="table-cell" data-guess-result="correct">Alive</td>
                                     </tr>
                                 </tbody>
                             </table>

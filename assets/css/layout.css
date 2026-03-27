@@ -1,0 +1,49 @@
+.wrapper {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.75);
+    background-blend-mode: darken;
+    min-height: inherit;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.header-container {
+    justify-content: space-between;
+}
+
+.header-container svg {
+    aspect-ratio: 1;
+    height: 40px;
+    cursor: pointer;
+    fill: var(--white-primary);
+}
+
+.header-container button {
+    width: 50px;
+    background-color: #0000;
+    aspect-ratio: 1;
+    color: inherit;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.header-container button:active,
+.site-logo:active {
+    transform: scale(0.9);
+}
+
+.site-header {
+    padding: 1rem;
+}
+
+.site-logo {
+    width: 75px;
+}
+
+.site-footer {
+    text-align: center;
+}
