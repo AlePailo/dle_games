@@ -8,8 +8,8 @@
 </script>
 
 <section class="game-info flex-center fd-column">
-    <h1 class="game-info__title"><?= $franchise->getName(); ?></h1>
-    <p class="game-info__description"><?= $franchise->getDescription(); ?></p>
+    <h1 class="game-info__title"><?= $title; ?></h1>
+    <p class="game-info__description"><?= $metaDescription; ?></p>
     <button id="giveup-btn" disabled>GIVE UP</button>
 </section>
 

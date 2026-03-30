@@ -7,16 +7,15 @@ use App\Model\Repository\FranchiseRepository;
 use App\Model\Entity\Franchise;
 use PDO;
 
-final class GameController {
+final class GameController extends BaseController {
 
     private CharacterRepository $characterRepository;
     private FranchiseRepository $franchiseRepository;
-    private string $basePath;
 
     public function __construct(PDO $pdo, string $basePath) {
+        parent::__construct($basePath);
         $this->characterRepository = new CharacterRepository($pdo);
         $this->franchiseRepository = new FranchiseRepository($pdo);
-        $this->basePath = $basePath;
     }
 
 
@@ -43,7 +42,7 @@ final class GameController {
     }
 
     private function renderGame(Franchise $franchise) : void {
-        $title = $franchise->getName() . ' - DLE Games';
+        /*$title = $franchise->getName() . ' - DLE Games';
         $metaDescription = $franchise->getDescription();
         $gameBackground = $franchise->getBgImageUrl();
         $pageType = 'Game';
@@ -57,7 +56,19 @@ final class GameController {
         ob_start();
         require __DIR__ . '/../View/game.php';
         $content = ob_get_clean();
-        require __DIR__ . '/../View/layouts/main.php';
+        require __DIR__ . '/../View/layouts/main.php';*/
+        
+        $columns = $this->buildColumns($franchise);
+        $characters = $this->characterRepository->findByFranchiseId($franchise->getId());
+        $this->render('game', [
+            'title' => $franchise->getName() . ' - DLE Games',
+            'metaDescription' => $franchise->getDescription(),
+            'gameBackground' => $franchise->getBgImageUrl(),
+            'pageType' => 'Game',
+            'columns' => $this->buildColumns($franchise),
+            'charactersForGame' => $this->buildCharactersData($characters, $columns),
+            'slug' => $franchise->getSlug()
+        ]);
     }
 
     private function buildColumns(Franchise $franchise) : array {

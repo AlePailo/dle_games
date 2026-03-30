@@ -5,29 +5,23 @@ namespace App\Controller;
 use App\Model\Repository\FranchiseRepository;
 use PDO;
 
-final class HomeController {
+final class HomeController extends BaseController {
     
     private FranchiseRepository $franchiseRepository;
-    private string $basePath;
 
     public function __construct(PDO $pdo, string $basePath) {
+        parent::__construct($basePath);
         $this->franchiseRepository = new FranchiseRepository($pdo);
-        $this->basePath = $basePath;
     }
 
     public function getAllFranchises() : void {
         $franchisesList = $this->franchiseRepository->getAll();
 
-        $basePath = $this->basePath;
-        $title = 'Home - DLE Games';
-        $metaDescription = 'Guess characters from your favourite games and anime';
-        $pageType = 'Home';
-
-        ob_start();
-        require __DIR__ . '/../View/home.php';
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../View/layouts/main.php';
-
+        $this->render('home', [
+            'title' => 'Home - DLE Games',
+            'metaDescription' => 'Guess characters from your favourite games and anime',
+            'pageType' => 'Home',
+            'franchisesList' => $franchisesList
+        ]);
     }
 }
