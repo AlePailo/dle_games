@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= htmlspecialchars($title ?? 'DLE Games') ?></title>
+    <title><?= htmlspecialchars($title. ' - DLE Games' ?? 'DLE Games') ?></title>
 
     <?php if(!empty($metaDescription)): ?>
         <meta name="description" content="<?= htmlspecialchars($metaDescription) ?>">
@@ -29,7 +29,8 @@
                     <header>
                         <h2 id="help-title">HOW TO PLAY</h2>
                     </header>
-                    <section>
+                    <div class="popup-menu__scrollable">
+                        <section>
                         <p>Guess the hidden character.</p>
                         <p>Each guess will reveal how close you are:</p>
                         <ul>
@@ -100,6 +101,7 @@
                             </table>
                         </figure>
                     </section>
+                    </div>
                     <footer>
                         <button id="close-help-menu-btn" class="popup-menu-btn" aria-label="Close help menu">GOT IT !</button>
                     </footer>

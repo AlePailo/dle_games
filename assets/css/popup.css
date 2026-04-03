@@ -5,14 +5,18 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     width: min(95%, 500px);
     height: 85%;
     background: var(--black-primary);
     padding: 1em;
     outline: 1px solid var(--white-primary);
     border-radius: 10px;
-    overflow-y: auto;
+}
+
+.popup-menu section {
+    width: 100%;
+    padding: 0.5em;
 }
 
 .popup-menu-btn {
@@ -38,13 +42,26 @@
     border-radius: 10px;
 }
 
+.popup-menu__scrollable {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 0;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    width: 100%;
+    gap: 1em;
+}
 
+.popup-menu__scrollable {
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge */
+}
 
-
-
-
-
-
+.popup-menu__scrollable::-webkit-scrollbar {
+    display: none;                /* Chrome/Safari */
+}
 
 #solution-name span {
     text-transform: uppercase;
@@ -67,7 +84,7 @@
 
 
 #player-stats, #solution-infos {
-    width: min(400px,100%);
+    width: min(400px, 100%);
 }
 
 .stats-row {
@@ -103,6 +120,11 @@
     border-radius: 0;
 }
 
+.end-game-user-controls {
+    flex-shrink: 0;
+    padding-top: 1rem;
+}
+
 .end-game-user-controls__image {
     fill: var(--white-primary);
     width: 100%;
@@ -119,8 +141,6 @@
 .end-game-user-controls__btn:hover > .end-game-user-controls__image {
     transform: scale(1.25);
 }
-
-
 
 
 

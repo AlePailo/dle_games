@@ -42,26 +42,10 @@ final class GameController extends BaseController {
     }
 
     private function renderGame(Franchise $franchise) : void {
-        /*$title = $franchise->getName() . ' - DLE Games';
-        $metaDescription = $franchise->getDescription();
-        $gameBackground = $franchise->getBgImageUrl();
-        $pageType = 'Game';
-
-        $columns = $this->buildColumns($franchise);
-        $characters = $this->characterRepository->findByFranchiseId($franchise->getId());
-        $charactersForGame = $this->buildCharactersData($characters, $columns);
-        $basePath = $this->basePath;
-        $slug = $franchise->getSlug();
-
-        ob_start();
-        require __DIR__ . '/../View/game.php';
-        $content = ob_get_clean();
-        require __DIR__ . '/../View/layouts/main.php';*/
-        
         $columns = $this->buildColumns($franchise);
         $characters = $this->characterRepository->findByFranchiseId($franchise->getId());
         $this->render('game', [
-            'title' => $franchise->getName() . ' - DLE Games',
+            'title' => $franchise->getName(),
             'metaDescription' => $franchise->getDescription(),
             'gameBackground' => $franchise->getBgImageUrl(),
             'pageType' => 'Game',
